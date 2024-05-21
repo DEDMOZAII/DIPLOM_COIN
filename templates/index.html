@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detect Fake Coins</title>
+</head>
+<body>
+    <h1>Detect Fake Coins</h1>
+    <form id="coinForm">
+        <label for="n_gen">Number of known genuine coins:</label>
+        <input type="number" id="n_gen"><br>
+        <label for="n_fake_l">Number of known fake coins (lighter):</label>
+        <input type="number" id="n_fake_l"><br>
+        <label for="n_fake_g">Number of known fake coins (heavier):</label>
+        <input type="number" id="n_fake_g"><br>
+        <label for="k_gen">Number of unknown genuine coins:</label>
+        <input type="number" id="k_gen"><br>
+        <label for="k_fake_l">Number of unknown fake coins (lighter):</label>
+        <input type="number" id="k_fake_l"><br>
+        <label for="k_fake_g">Number of unknown fake coins (heavier):</label>
+        <input type="number" id="k_fake_g"><br>
+        <label for="weights">Weights of coins (comma separated):</label>
+        <input type="text" id="weights"><br>
+        <button type="button" onclick="submitWeights()">Detect</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        function submitWeights() {
+            var n_gen = parseInt(document.getElementById('n_gen').value);
+            var n_fake_l = parseInt(document.getElementById('n_fake_l').value);
+            var n_fake_g = parseInt(document.getElementById('n_fake_g').value);
+            var k_gen = parseInt(document.getElementById('k_gen').value);
+            var k_fake_l = parseInt(document.getElementById('k_fake_l').value);
+            var k_fake_g = parseInt(document.getElementById('k_fake_g').value);
+            var weights = document.getElementById('weights').value.split(',').map(Number);
+
+            fetch('/detect', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    n_gen: n_gen,
+                    n_fake_l: n_fake_l,
+                    n_fake_g: n_fake_g,
+                    k_gen: k_gen,
+                    k_fake_l: k_fake_l,
+                    k_fake_g: k_fake_g,
+                    weights: weights
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  document.getElementById('result').innerHTML = 'Result: ' + data.result;
+              });
+        }
+    </script>
+</body>
+</html>
