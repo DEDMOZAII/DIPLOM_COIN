@@ -51,7 +51,13 @@
                 })
             }).then(response => response.json())
               .then(data => {
-                  document.getElementById('result').innerHTML = 'Result: ' + data.result;
+                  var resultDiv = document.getElementById('result');
+                  resultDiv.innerHTML = '';
+                  data.result.forEach(function(res) {
+                      var p = document.createElement('p');
+                      p.textContent = res;
+                      resultDiv.appendChild(p);
+                  });
               });
         }
     </script>
